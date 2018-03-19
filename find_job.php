@@ -3,20 +3,30 @@
   include 'nav_menu.php';
   require 'global_variables.php';
 ?>
+  <?php
+    $link = mysqli_connect('localhost', 'root', '', 'jobeet') or die('Cannot connect to the database.');
+    mysqli_set_charset($link, 'UTF8');
+    $stSQL = "SELECT name FROM categories";
+    $result = mysqli_query($link, $stSQL);
+    $totalRows = mysqli_num_rows($result);
+    $i=0;
+    if ($totalRows==0) echo('There is no data!');
+    else
+  ?>
   <h2>Find a job</h2>
   <div class="container">
-  <form class="form-horizontal" role="form" name="find_form" action="find_job.html" method="get">
+  <form class="form-horizontal" role="form" name="find_form" action="search.php" method="get">
   <div class="form-group">
     <div class="row">
-      <div class="col-md-12">
-        <input type="text" name="username" class="form-control" placeholder="Occupation">
-      </div>
-    </div><br />
-    <div class="row">
       <select name="occupation">
-        <?php foreach ($categories as $obj) : ?>
-        <option value="<?=$obj?>"><?=$obj?></option>
-        <?php endforeach ?>
+        <?php while ($row = mysqli_fetch_array($result))
+          {
+			$i+=1;		
+		?>
+        <option value="<?=$row["name"]?>"><?=$row["name"]?></option>
+        <?php
+		  }
+		?>
       </select>
     </div><br />
     <div class="row">
@@ -25,19 +35,41 @@
     </div>
   </div>
   </form>
-  <table class="table">
-    <tr class="row"> 
+  <?php
+    $link = mysqli_connect('localhost', 'root', '', 'jobeet') or die('Cannot connect to the database.');
+    mysqli_set_charset($link, 'UTF8');
+    $stSQL = "SELECT j.id AS job_id, c.name AS occupation, j.modified AS posted FROM jobs AS j, categories AS c WHERE (j.`category_id`=c.`id`)";
+    $result = mysqli_query($link, $stSQL);
+    $totalRows = mysqli_num_rows($result);
+	$i=0;
+	if ($totalRows==0) echo('There is no data!');
+	else
+  ?>
+  <div class="container">
+    <table class="table">
+      <tr class="row">
+        <th class="col-md-2">ID</th> 
         <th class="col-md-2">Name</th>
         <th class="col-md-2">Posted</th>
         <th class="col-md-2">Action</th> 
-    </tr>
-    <?php foreach ($newJobs as $obj) : ?>
-    <tr class="row"> 
-      <td class="col-md-2"><?=$obj[0] ?></td>
-      <td class="col-md-2"><?=$obj[2] ?></td>
-      <td class="col-md-2">Apply</td> 
-    </tr>
-    <?php endforeach ?> 
+      </tr>
+    <?php
+      while ($row = mysqli_fetch_array($result))
+	  {
+        $i+=1;
+	?>
+      <tr class="row">
+        <td class="col-md-2"><?=$row["job_id"]?></td> 
+        <td class="col-md-2"><?=$row["occupation"]?></td>
+        <td class="col-md-2"><?=$row["posted"]?></td>
+        <td class="col-md-2">
+          <a href="<?= 'apply.php?job_id=' . $row["job_id"] ?>">Apply</a>
+        </td> 
+      </tr>
+    <?php
+	  }
+	  mysqli_close($link);
+	?>  
   </table>
   </div>
 <?php
