@@ -10,6 +10,7 @@
 	border-spacing: 0px;
 	border: 2px solid #EBDDBC;
 }
+
 .tablelist th {
 	margin: 0;
 	padding: 4px 6px;
@@ -17,6 +18,7 @@
 	background-color: #0F0;	
 	text-align: center;
 }
+
 .tablelist td {
 	margin: 0;
 	padding: 4px;
@@ -34,5 +36,14 @@ h2{
 	color: #C00;
 }
 
+.fail {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+	color: red;
+}
 
-
+.success {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+	color: blue;
+}
